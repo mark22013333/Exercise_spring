@@ -9,6 +9,13 @@ public class People {
 		System.out.println("執行建構子");
 	}
 
+	public People(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+		System.out.println("執行有參數的建構子");
+	}
+
 	public int getId() {
 		return id;
 	}

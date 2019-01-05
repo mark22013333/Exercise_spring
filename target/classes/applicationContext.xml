@@ -12,8 +12,22 @@
         
         ">
 	<!-- bean definitions here -->
-	
+
 	<!-- id為取得該實體物件 -->
 	<!-- class為建立該類別的實體 -->
-	<bean id="peo" class="idv.cheng.pojo.People" />
+	<bean id="peo" class="idv.cheng.pojo.People">
+		<!-- ref引用另一個bean -->
+		<!-- value 基本資料類型或String等... -->
+		<constructor-arg index="0" name="id" type="int"
+			value="001" />
+		<constructor-arg index="1" name="name"
+			type="java.lang.String" value="Mark" />
+	</bean>
+
+	<!-- <bean id="factory" class="idv.cheng.pojo.PeopleFactory"></bean> -->
+	<!-- <bean id="peo1" factory-bean="factory" factory-method="newInstence"></bean> -->
+
+	<!-- static bean -->
+	<bean id="peo-static" class="idv.cheng.pojo.PeopleFactory"
+		factory-method="newInstence"></bean>
 </beans>
