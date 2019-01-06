@@ -1,33 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
-        
         http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        
-        http://www.springframework.org/schema/aop 
-        http://www.springframework.org/schema/aop/spring-aop.xsd
-        
         ">
-	<!-- bean definitions here -->
-
-	<!-- id為取得該實體物件 -->
-	<!-- class為建立該類別的實體 -->
-	<bean id="peo" class="idv.cheng.pojo.People">
-		<!-- ref引用另一個bean -->
-		<!-- value 基本資料類型或String等... -->
-		<constructor-arg index="0" name="id" type="int"
-			value="001" />
-		<constructor-arg index="1" name="name"
-			type="java.lang.String" value="Mark" />
-	</bean>
-
-	<!-- <bean id="factory" class="idv.cheng.pojo.PeopleFactory"></bean> -->
-	<!-- <bean id="peo1" factory-bean="factory" factory-method="newInstence"></bean> -->
-
-	<!-- static bean -->
-	<bean id="peo-static" class="idv.cheng.pojo.PeopleFactory"
-		factory-method="newInstence"></bean>
+	<!-- 封裝資料庫類別 取得資料庫連接 -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"></bean>
 </beans>
+<!-- <bean id="peo02" class="idv.cheng.pojo.People"> -->
+
+<!-- <property name="id"> -->
+<!-- <value>002</value> -->
+<!-- </property> -->
+
+<!-- <property name="name"> -->
+<!-- <value>eighteen</value> -->
+<!-- </property> -->
+
+<!-- <property name="sets"> -->
+<!-- <set> -->
+<!-- <value>11</value> -->
+<!-- <value>12</value> -->
+<!-- <value>13</value> -->
+<!-- <value>14</value> -->
+<!-- </set> -->
+<!-- </property> -->
+
+<!-- <property name="list"> -->
+<!-- <list> -->
+<!-- <value>1</value> -->
+<!-- <value>2</value> -->
+<!-- </list> -->
+<!-- </property> -->
+
+<!-- <property name="maps"> -->
+<!-- <map> -->
+<!-- <entry key="a" value="a-1" /> -->
+<!-- <entry key="b" value="b-2" /> -->
+<!-- </map> -->
+<!-- </property> -->
+
+<!-- <property name="desk" ref="desk" /> -->
+<!-- </bean> -->
+
+<!-- <bean id="desk" class="idv.cheng.pojo.Desk"></bean> -->
+
+
+
+
+<!-- xmlns:aop="http://www.springframework.org/schema/aop" -->
+<!-- http://www.springframework.org/schema/aop -->
+<!-- http://www.springframework.org/schema/aop/spring-aop.xsd -->
+<!-- bean definitions here -->
+
+<!-- id為取得該實體物件 -->
+<!-- class為建立該類別的實體 -->
+<!-- <bean id="peo" class="idv.cheng.pojo.People"> -->
+<!-- ref引用另一個bean -->
+<!-- value 基本資料類型或String等... -->
+<!-- <constructor-arg index="0" name="id" type="int" -->
+<!-- value="001" /> -->
+<!-- <constructor-arg index="1" name="name" -->
+<!-- type="java.lang.String" value="Mark" /> -->
+<!-- </bean> -->
+
+<!-- <bean id="factory" class="idv.cheng.pojo.PeopleFactory"></bean> -->
+<!-- <bean id="peo1" factory-bean="factory" factory-method="newInstence"></bean> -->
+
+<!-- static bean -->
+<!-- <bean id="peo-static" class="idv.cheng.pojo.PeopleFactory" -->
+<!-- factory-method="newInstence"></bean> -->
+
