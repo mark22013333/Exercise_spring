@@ -32,11 +32,7 @@ public class LoginServlet extends HttpServlet {
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		String code = req.getParameter("code");
-		System.out.println("========" + code + "==========@@@@@");
-		System.out.println(req.getSession().getAttribute("code"));
 		String codeSession = req.getSession().getAttribute("code").toString();
-		System.out.println(code);
-		System.out.println("===00000999999999================@@@@@");
 		if (codeSession.equals(code)) {
 			String username = req.getParameter("username");
 			String password = req.getParameter("password");
