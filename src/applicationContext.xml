@@ -1,31 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<!-- 封裝資料庫類別 取得資料庫連接 -->
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-		<property name="url" value="jdbc:mysql://localhost:3306/demo"></property>	
-		<property name="username" value="demouser"></property>
-		<property name="password" value="e23s5"></property>
-	</bean>
-	<!--spring幫助建立SqlSessionFactory  -->
-	<bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource"></property>
-	</bean>
-	<!-- 掃描器相當於mybatis.xml中mappers下package標籤，並建立物件 -->
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="idv.cheng.mapper"></property>
-		<property name="sqlSessionFactory" ref="factory"></property>
-	</bean>
-	
-	<!-- 建立Service -->
-	<bean id="usersService" class="idv.cheng.service.impl.UsersServiceImpl">
-		<property name="usersMapper" ref="usersMapper"></property>
-	</bean>
-	
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/aop 
+         http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="mythrow" class="idv.cheng.advice.MyThrow"></bean>
+	<aop:config>
+		<aop:pointcut expression="execution(* idv.cheng.test.Demo.demo1())" id="mypoint" />
+		<aop:advisor advice-ref="mythrow" pointcut-ref="mypoint" />
+<!-- 		<aop:aspect ref="mythrow"> -->
+<!-- 			<aop:pointcut expression="execution(* idv.cheng.test.Demo.demo1())" id="mypoint" /> -->
+<!-- 			<aop:after-throwing method="afterThrowing" throwing="ex" pointcut-ref="mypoint" /> -->
+<!-- 		</aop:aspect> -->
+	</aop:config>
+	<bean id="demo" class="idv.cheng.test.Demo"></bean>
 </beans>
+<!-- 設定通知類別的物件，從橫面中引入 -->
+<!-- <bean id="mybefore" class="idv.cheng.advice.MyBeforeAdvice"></bean> -->
+<!-- <bean id="myafter" class="idv.cheng.advice.MyAfterAdvice"></bean> -->
+<!-- 設定橫切面 -->
+<!-- <aop:config> -->
+<!-- 設定切點 -->
+<!-- <aop:pointcut expression="execution(* idv.cheng.test.*.*(..))" id="mypoint"/> -->
+<!-- 通知 -->
+<!-- <aop:advisor advice-ref="mybefore" pointcut-ref="mypoint"/> -->
+<!-- <aop:advisor advice-ref="myafter" pointcut-ref="mypoint"/> -->
+<!-- </aop:config> -->
+<!-- 設定Demo類別，測試使用 -->
+<!-- <bean id="demo" class="idv.cheng.test.Demo"></bean> -->
+<!-- <bean id="demo1" class="idv.cheng.test.Demo1"></bean> -->
+
+<!-- <bean id="mythrow" class="idv.cheng.advice.MyThrowAdvice"></bean> -->
+<!-- <aop:config> -->
+<!-- <aop:aspect ref="mythrow"> -->
+<!-- <aop:pointcut expression="execution(* idv.cheng.test.Demo.demo1())" 
+	id="mypoint"/> -->
+<!-- throwing 此參數特別需要注意！！在方法中的參數要相同配對 -->
+<!-- <aop:after-throwing method="myexeception" pointcut-ref="mypoint" throwing="e"/> -->
+<!-- </aop:aspect> -->
+<!-- </aop:config> -->
+
+
+
+<!-- --><!-- --><!-- -->
+<!-- --><!-- --><!-- -->
+<!-- --><!-- --><!-- -->
+
+<!-- 封裝資料庫類別 取得資料庫連接 -->
+<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+<!-- <property name="driverClassName" value="com.mysql.jdbc.Driver"></property> -->
+<!-- <property name="url" value="jdbc:mysql://localhost:3306/demo"></property> -->
+<!-- <property name="username" value="demouser"></property> -->
+<!-- <property name="password" value="e23s5"></property> -->
+<!-- </bean> -->
+<!--spring幫助建立SqlSessionFactory -->
+<!-- <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean"> -->
+<!-- <property name="dataSource" ref="dataSource"></property> -->
+<!-- </bean> -->
+<!-- 掃描器相當於mybatis.xml中mappers下package標籤，並建立物件 -->
+<!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> -->
+<!-- <property name="basePackage" value="idv.cheng.mapper"></property> -->
+<!-- <property name="sqlSessionFactory" ref="factory"></property> -->
+<!-- </bean> -->
+
+<!-- 建立Service -->
+<!-- <bean id="usersService" class="idv.cheng.service.impl.UsersServiceImpl"> -->
+<!-- <property name="usersMapper" ref="usersMapper"></property> -->
+<!-- </bean> -->
+
+
+
+<!-- -->
+<!-- -->
+<!-- -->
+
+
+
 <!-- <bean id="peo02" class="idv.cheng.pojo.People"> -->
 
 <!-- <property name="id"> -->
