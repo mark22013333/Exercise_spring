@@ -2,22 +2,159 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans.xsd
-         http://www.springframework.org/schema/aop 
-         http://www.springframework.org/schema/aop/spring-aop.xsd">
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd"
+	default-autowire="byName">
+	<context:property-placeholder
+		location="classpath:db.properties,classpath:second.properties" />
+	<context:component-scan
+		base-package="idv.cheng.service.impl"></context:component-scan>
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.username}"></property>
+	</bean>
+	<!-- SqlSessionFactory物件 -->
+	<bean id="factory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="typeAliasesPackage" value="idv.cheng.pojo"></property>
+	</bean>
 
-	<bean id="mythrow" class="idv.cheng.advice.MyThrow"></bean>
+	<!-- 掃描器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="idv.cheng.mapper"></property>
+		<property name="sqlSessionFactory" ref="factory"></property>
+		<property name="sqlSessionFactoryBeanName" value="factory"></property>
+	</bean>
+	<!-- spring-jdbc.jar中 -->
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- 設定聲明式交易 -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<!-- 哪些方法需要有交易控制 -->
+			<!-- 方法以ins開頭的交易管理 -->
+			<tx:method name="ins*" propagation="REQUIRED"
+				isolation="DEFAULT" />
+			<tx:method name="del*" propagation="MANDATORY" />
+			<tx:method name="upd*" propagation="REQUIRED"
+				rollback-for="java.lang.Exception" />
+			<!-- 只要是查詢方法建議用唯獨屬性，資料庫底層會稍微優化，默認為false -->
+			<tx:method name="*" read-only="true" no-rollback-for="" />
+		</tx:attributes>
+	</tx:advice>
 	<aop:config>
-		<aop:pointcut expression="execution(* idv.cheng.test.Demo.demo1())" id="mypoint" />
-		<aop:advisor advice-ref="mythrow" pointcut-ref="mypoint" />
-<!-- 		<aop:aspect ref="mythrow"> -->
-<!-- 			<aop:pointcut expression="execution(* idv.cheng.test.Demo.demo1())" id="mypoint" /> -->
-<!-- 			<aop:after-throwing method="afterThrowing" throwing="ex" pointcut-ref="mypoint" /> -->
-<!-- 		</aop:aspect> -->
+		<!-- 切點範圍設定大一點 -->
+		<aop:pointcut
+			expression="execution(* idv.cheng.service.impl.*.*(..))" id="mypoint" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="mypoint" />
 	</aop:config>
-	<bean id="demo" class="idv.cheng.test.Demo"></bean>
 </beans>
+<!-- <bean id="peo" class="idv.cheng.pojo.People"></bean> -->
+<!-- <bean id="teacher1" class="idv.cheng.testC.Teacher" scope="prototype"></bean> -->
+<!-- <bean id="teacher2" class="idv.cheng.testC.Teacher"></bean> -->
+<!-- <context:property-placeholder -->
+<!-- location="classpath:db.properties,classpath:second.properties" /> -->
+<!-- <context:component-scan -->
+<!-- base-package="idv.cheng.service.impl"></context:component-scan> -->
+<!-- <bean id="dataSource" -->
+<!-- class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+<!-- <property name="driverClassName" value="${jdbc.driver}"></property> -->
+<!-- <property name="url" value="${jdbc.url}"></property> -->
+<!-- <property name="username" value="${jdbc.username}"></property> -->
+<!-- <property name="password" value="${jdbc.username}"></property> -->
+<!-- </bean> -->
+
+<!-- SqlSessionFactory物件 -->
+<!-- <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean"> -->
+<!-- <property name="dataSource" ref="dataSource"></property> -->
+<!-- <property name="typeAliasesPackage" value="idv.cheng.pojo"></property> -->
+<!-- </bean> -->
+
+<!-- 掃描器 -->
+<!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> -->
+<!-- <property name="basePackage" value="idv.cheng.mapper"></property> -->
+<!-- <property name="sqlSessionFactory" ref="factory"></property> -->
+<!-- <property name="sqlSessionFactoryBeanName" value="factory"></property> -->
+<!-- </bean> -->
+
+<!-- 注入 -->
+<!-- <bean id="usersService" -->
+<!-- class="idv.cheng.service.impl.UsersServiceImpl"> -->
+<!-- <property name="usersMapper" ref="usersMapper"></property> -->
+<!-- </bean> -->
+
+<!-- aop -->
+<!-- <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy> -->
+
+<!-- <bean id="mybefore" class="idv.cheng.advice.MyBefore"></bean> -->
+<!-- <bean id="myafter" class="idv.cheng.advice.MyAfter"></bean> -->
+<!-- <aop:config> -->
+<!-- <aop:pointcut -->
+<!-- expression="execution(* idv.cheng.service.impl.UsersServiceImpl.login(..))" -->
+<!-- id="mypoint" /> -->
+<!-- <aop:advisor advice-ref="mybefore" pointcut="mypoint" /> -->
+<!-- <aop:advisor advice-ref="myafter" pointcut="mypoint" /> -->
+<!-- </aop:config> -->
+
+<!-- <context:component-scan -->
+<!-- base-package="idv.cheng.advice,idv.cheng.test"></context:component-scan> -->
+<!-- proxy-target-class true 使用cglib動態代理 false 使用jdk動態代理 -->
+<!-- <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy> -->
+<!-- <bean id="demo" class="idv.cheng.test.Demo"></bean> -->
+<!-- <bean id="myadvice" class="idv.cheng.advice.MyAdvice"></bean> -->
+<!-- <aop:config> -->
+<!-- <aop:aspect ref="myadvice"> -->
+<!-- <aop:pointcut -->
+<!-- expression="execution(* idv.cheng.test.Demo.demo1(String,int)) and args(name1,age1)" -->
+<!-- id="mypoint" /> -->
+<!-- <aop:pointcut -->
+<!-- expression="execution(* idv.cheng.test.Demo.demo1(String)) and args(name1)" -->
+<!-- id="mypoint1" /> -->
+<!-- <aop:before method="mybefore" pointcut-ref="mypoint" -->
+<!-- arg-names="name1,age1" /> -->
+<!-- <aop:before method="mybefore1" pointcut-ref="mypoint1" -->
+<!-- arg-names="name1" /> -->
+<!-- <aop:after-returning method="myaftering" pointcut-ref="mypoint"/> -->
+<!-- <aop:after method="myafter" pointcut-ref="mypoint"/> -->
+<!-- <aop:after-throwing method="mythrow" pointcut-ref="mypoint"/> -->
+<!-- <aop:around method="myarround" pointcut-ref="mypoint"/> -->
+<!-- </aop:aspect> -->
+<!-- </aop:config> -->
+<!-- <bean id="myarround" class="idv.cheng.advice.MyArround"></bean> -->
+<!-- <aop:config> -->
+<!-- <aop:pointcut -->
+<!-- expression="execution(* idv.cheng.test.Demo.demo1())" id="mypoint" /> -->
+<!-- <aop:advisor advice-ref="myarround" pointcut-ref="mypoint" /> -->
+<!-- </aop:config> -->
+<!-- <bean id="demo" class="idv.cheng.test.Demo"></bean> -->
+
+<!-- <bean id="mythrow" class="idv.cheng.advice.MyThrow"></bean> -->
+<!-- <aop:config> -->
+<!-- <aop:pointcut expression="execution(* idv.cheng.test.Demo.demo1())" 
+	id="mypoint" /> -->
+<!-- <aop:advisor advice-ref="mythrow" pointcut-ref="mypoint" /> -->
+<!-- <aop:aspect ref="mythrow"> -->
+<!-- <aop:pointcut expression="execution(* idv.cheng.test.Demo.demo1())" 
+	id="mypoint" /> -->
+<!-- <aop:after-throwing method="afterThrowing" throwing="ex" pointcut-ref="mypoint" 
+	/> -->
+<!-- </aop:aspect> -->
+<!-- </aop:config> -->
+<!-- <bean id="demo" class="idv.cheng.test.Demo"></bean> -->
 <!-- 設定通知類別的物件，從橫面中引入 -->
 <!-- <bean id="mybefore" class="idv.cheng.advice.MyBeforeAdvice"></bean> -->
 <!-- <bean id="myafter" class="idv.cheng.advice.MyAfterAdvice"></bean> -->
