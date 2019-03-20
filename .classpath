@@ -22,5 +22,6 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/chengmark/MyGit/binary-tree-master/out/artifacts/binary_tree_jar/binary-tree.jar" sourcepath="/Users/chengmark/MyGit/binary-tree-master/src"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
